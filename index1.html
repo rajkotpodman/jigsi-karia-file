@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>jigsi_karia - 700+ Ultimate File Extension Finder Engine</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00ff00">
+    <style>
+        /* ----- Reset & Matrix Canvas ----- */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#000; overflow-x:hidden; font-family:'Courier New',monospace; color:#0f0; min-height:100vh; }
+        #matrix-canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; background:#000; }
+
+        /* ----- Theme Toggle Button ----- */
+        .theme-toggle {
+            position:fixed; top:15px; right:15px; z-index:10000;
+            background:#0f0; color:#000; border:none; padding:8px 14px;
+            font-family:inherit; font-weight:bold; cursor:pointer;
+            border-radius:5px; box-shadow:0 0 10px #0f0; transition:0.2s;
+        }
+        .theme-toggle:hover { background:#fff; box-shadow:0 0 15px #fff; }
+
+        /* Light Mode Styles Override */
+        body.light-mode { background:#f0f4f0; color:#006600; }
+        body.light-mode #matrix-canvas { display:none; }
+        body.light-mode .container { background:rgba(255,255,255,0.95); border-color:#008c00; box-shadow:0 0 30px rgba(0,140,0,0.2); }
+        body.light-mode h1 { color:#008c00; text-shadow:none; }
+        body.light-mode .version { color:#0055cc; }
+        body.light-mode .auth-box { background:#fff; border-color:#008c00; box-shadow:0 0 25px rgba(0,140,0,0.3); }
+        body.light-mode .auth-box h2 { color:#008c00; }
+        body.light-mode .auth-box input { background:#f9f9f9; border-color:#008c00; color:#000; }
+        body.light-mode .auth-box button { background:#008c00; color:#fff; }
+        body.light-mode .search-input { background:#fff; border-color:#008c00; color:#000; }
+        body.light-mode .category-section { background:rgba(230,245,230,0.9); border-color:#008c00; }
+        body.light-mode .category-title { color:#0055cc; }
+        body.light-mode .engine-btn { background:#008c00; color:#fff; box-shadow:0 0 6px rgba(0,140,0,0.3); }
+        body.light-mode .engine-btn:hover { background:#000; color:#fff; box-shadow:0 0 15px #000; }
+
+        /* ----- Auth Overlay (Login / Signup) ----- */
+        .auth-overlay {
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.92); z-index:9999;
+            display:flex; justify-content:center; align-items:center;
+        }
+        .auth-box {
+            background:rgba(10,15,29,0.95); border:2px solid #0f0;
+            padding:30px; border-radius:12px; width:90%; max-width:400px;
+            text-align:center; box-shadow:0 0 25px rgba(0,255,0,0.4);
+        }
+        .auth-box h2 { margin-bottom:20px; color:#0f0; font-size:20px; letter-spacing:1px; }
+        .auth-box input {
+            width:100%; padding:12px; margin:10px 0;
+            background:#000; border:1px solid #0f0; color:#fff;
+            font-family:inherit; font-size:16px; text-align:center;
+            border-radius:5px; outline:none;
+        }
+        .auth-box button {
+            width:100%; padding:12px; margin-top:15px;
+            background:#0f0; color:#0a0f1d; border:none;
+            font-size:16px; font-weight:bold; cursor:pointer;
+            border-radius:5px; font-family:inherit; transition:0.2s;
+        }
+        .auth-box button:hover { background:#fff; box-shadow:0 0 15px #fff; color:#000; }
+        .auth-toggle { color:#00bcff; cursor:pointer; margin-top:15px; display:inline-block; font-size:14px; }
+
+        /* ----- Main Container (hidden until auth) ----- */
+        .container {
+            position:relative; z-index:1;
+            background:rgba(10,15,29,0.85); padding:25px 30px 40px;
+            border-radius:15px; box-shadow:0 0 30px rgba(0,255,0,0.25);
+            width:95%; max-width:1400px; margin:20px auto;
+            border:1px solid #0f0; backdrop-filter:blur(2px);
+            text-align:center; display:none;
+        }
+        h1 { font-size:28px; font-weight:700; color:#0f0; margin-bottom:5px; text-shadow:0 0 15px rgba(0,255,0,0.6); }
+        .version { font-size:14px; color:#00bcff; margin-bottom:25px; font-weight:bold; text-shadow:0 0 8px rgba(0,188,255,0.3); }
+
+        /* ----- Notice Banner ----- */
+        .illegal-notice {
+            background:rgba(255,68,68,0.25); border:2px solid #f44;
+            color:#f99; padding:15px; border-radius:8px; margin-bottom:25px;
+            font-size:14px; font-weight:bold; display:flex;
+            justify-content:space-between; align-items:center; gap:15px; text-align:left;
+        }
+        .notice-btn {
+            background:#f44; color:#fff; border:none; padding:8px 16px;
+            border-radius:5px; font-size:12px; font-weight:bold;
+            cursor:pointer; font-family:inherit; transition:0.2s; white-space:nowrap;
+        }
+        .notice-btn:hover { background:#fff; color:#000; box-shadow:0 0 10px #fff; }
+
+        /* ----- Search Box ----- */
+        .search-box { position:relative; width:100%; max-width:800px; margin:0 auto 35px auto; }
+        .search-input {
+            width:100%; padding:16px 56px 16px 50px;
+            border:2px solid #0f0; background:rgba(10,15,29,0.9);
+            border-radius:10px; font-size:18px; outline:none;
+            color:#fff; text-align:center; font-weight:bold; font-family:inherit;
+        }
+        .search-input:focus { box-shadow:0 0 20px #0f0; border-color:#0f0; }
+        .search-icon { position:absolute; left:18px; top:18px; color:#0f0; font-size:20px; }
+        .copy-btn {
+            position:absolute; right:14px; top:50%; transform:translateY(-50%);
+            background:none; border:1px solid rgba(0,255,0,0.4); color:#0f0;
+            font-size:16px; width:34px; height:34px; border-radius:7px;
+            cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center;
+        }
+        .copy-btn:hover { background:#0f0; color:#000; box-shadow:0 0 10px #0f0; }
+        .copy-btn.copied { background:#0f0; color:#000; border-color:#0f0; }
+
+        /* ----- Search History Dropdown ----- */
+        .search-history {
+            position:absolute; top:calc(100% + 6px); left:0; right:0;
+            background:rgba(10,15,29,0.97); border:1px solid rgba(0,255,0,0.4);
+            border-radius:10px; z-index:500; overflow:hidden;
+            box-shadow:0 8px 24px rgba(0,0,0,0.6); display:none;
+        }
+        .search-history.open { display:block; }
+        .sh-header {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:8px 14px; border-bottom:1px solid rgba(0,255,0,0.15);
+            font-size:11px; letter-spacing:1px; color:rgba(0,255,0,0.5); text-transform:uppercase;
+        }
+        .sh-clear { background:none; border:none; color:#ff4444; cursor:pointer; font-size:11px; font-family:inherit; font-weight:700; letter-spacing:1px; }
+        .sh-clear:hover { color:#fff; }
+        .sh-item {
+            padding:10px 14px; cursor:pointer; font-size:14px; color:#ccc;
+            display:flex; align-items:center; gap:10px; transition:background 0.15s;
+            border-bottom:1px solid rgba(0,255,0,0.06);
+        }
+        .sh-item:last-child { border-bottom:none; }
+        .sh-item:hover { background:rgba(0,255,0,0.1); color:#0f0; }
+        .sh-icon { color:rgba(0,255,0,0.4); font-size:12px; }
+
+        /* ----- Category Sections ----- */
+        .category-section {
+            margin-bottom:28px; text-align:left;
+            background:rgba(13,21,39,0.8); padding:20px;
+            border-radius:10px; border:1px solid #00bcff;
+        }
+        .category-title {
+            font-size:16px; font-weight:700; color:#00bcff;
+            text-transform:uppercase; margin-bottom:15px;
+            letter-spacing:1px; border-left:4px solid #ff0055; padding-left:10px;
+        }
+        .buttons-grid { display:flex; flex-wrap:wrap; gap:8px; }
+        .engine-btn {
+            padding:8px 12px; font-size:12px; font-weight:600;
+            color:#0a0f1d; background:#0f0; border:none; border-radius:5px;
+            cursor:pointer; transition:all 0.2s; text-align:center;
+            min-width:110px; font-family:inherit; box-shadow:0 0 6px rgba(0,255,0,0.3);
+            text-transform:uppercase;
+        }
+        .engine-btn:hover { background:#fff; box-shadow:0 0 20px #fff; transform:translateY(-2px) scale(1.02); color:#000; }
+
+        /* ----- Visitor Counter ----- */
+        .visitor-counter {
+            display:inline-flex; align-items:center; gap:8px;
+            background:rgba(0,255,0,0.07); border:1px solid rgba(0,255,0,0.3);
+            border-radius:20px; padding:5px 16px; margin:8px auto 0 auto;
+            font-size:13px; letter-spacing:1px; color:#0f0;
+        }
+        .visitor-counter .vc-dot {
+            width:8px; height:8px; border-radius:50%; background:#0f0;
+            box-shadow:0 0 6px #0f0; animation:vcpulse 1.5s infinite;
+        }
+        @keyframes vcpulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        /* ----- Pro Action Hub ----- */
+        .pro-action-hub {
+            display:flex; flex-wrap:wrap; gap:12px;
+            justify-content:center; margin:0 auto 30px auto;
+            padding:18px 20px;
+            background:rgba(10,15,29,0.9);
+            border:2px solid #ffaa00;
+            border-radius:12px;
+            box-shadow:0 0 20px rgba(255,170,0,0.3);
+        }
+        .pro-btn {
+            padding:14px 22px; font-size:14px; font-weight:700;
+            border:none; border-radius:8px; cursor:pointer;
+            font-family:'Courier New',monospace; transition:all 0.2s;
+            letter-spacing:1px; text-transform:uppercase;
+        }
+        .btn-buy-pro {
+            background:linear-gradient(135deg,#ffaa00,#ff6600);
+            color:#0a0f1d; box-shadow:0 0 14px rgba(255,170,0,0.5);
+        }
+        .btn-buy-pro:hover { background:#fff; color:#000; box-shadow:0 0 25px #ffaa00; transform:translateY(-2px); }
+        .btn-donate {
+            background:linear-gradient(135deg,#cc33ff,#7700cc);
+            color:#fff; box-shadow:0 0 14px rgba(204,51,255,0.5);
+        }
+        .btn-donate:hover { background:#fff; color:#000; box-shadow:0 0 25px #cc33ff; transform:translateY(-2px); }
+        .btn-store {
+            background:linear-gradient(135deg,#00bcff,#0055cc);
+            color:#fff; box-shadow:0 0 14px rgba(0,188,255,0.5);
+        }
+        .btn-store:hover { background:#fff; color:#000; box-shadow:0 0 25px #00bcff; transform:translateY(-2px); }
+
+        /* ----- Stats Counter Row ----- */
+        .stats-row {
+            display:flex; flex-wrap:wrap; gap:15px;
+            justify-content:center; margin:0 auto 20px auto;
+        }
+        .stat-card {
+            background:rgba(10,15,29,0.85); border:1px solid rgba(0,255,0,0.3);
+            border-radius:10px; padding:14px 18px; text-align:center;
+            min-width:110px; box-shadow:0 0 12px rgba(0,255,0,0.1);
+        }
+        .stat-card .stat-num { font-size:26px; font-weight:700; color:#0f0; }
+        .stat-card .stat-label { font-size:10px; color:rgba(0,255,0,0.5); margin-top:4px; text-transform:uppercase; letter-spacing:1px; }
+
+        /* ----- Filter Extensions Box ----- */
+        .filter-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .filter-input {
+            width: 50%;
+            padding: 10px;
+            border: 1px solid #00bcff;
+            background: rgba(0,0,0,0.7);
+            color: #00bcff;
+            font-family: inherit;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('Service Worker Registered!', reg))
+        .catch(() => {});
+    });
+}
+</script>
+
+<!-- Matrix Canvas -->
+<canvas id="matrix-canvas"></canvas>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">☀ LIGHT MODE</button>
+
+<!-- ==================== AUTH OVERLAY ==================== -->
+<div id="authOverlay" class="auth-overlay">
+    <div class="auth-box" id="loginBox">
+        <h2>🔐 JIGSI_KARIA SECURE PORTAL</h2>
+        <input type="text" id="loginUser" placeholder="યુઝરનેમ ટાઈપ કરો..." />
+        <input type="password" id="loginPass" placeholder="પાસવર્ડ ટાઈપ કરો..." />
+        <button onclick="handleLogin()">પોર્ટલ એક્સેસ કરો (Login)</button>
+        <span class="auth-toggle" onclick="toggleAuth(true)">નવું ક્રેડિન્શિયલ બનાવો (Sign Up)</span>
+    </div>
+    <div class="auth-box" id="signupBox" style="display:none;">
+        <h2>📝 REGISTER HACKER ID</h2>
+        <input type="text" id="regUser" placeholder="નવું યુઝરનેમ નક્કી કરો..." />
+        <input type="password" id="regPass" placeholder="નવો સેફ પાસવર્ડ સેટ કરો..." />
+        <button onclick="handleSignup()">ડેટાબેઝ સેવ કરો (Sign Up)</button>
+        <span class="auth-toggle" onclick="toggleAuth(false)">પહેલેથી આઈડી છે? લોગિન કરો</span>
+    </div>
+</div>
+
+<!-- ==================== MAIN APPLICATION ==================== -->
+<div class="container" id="mainApp">
+
+    <h1>⚡ CYBER OSINT GATEWAY & FILE EXTENSION SEARCH ENGINE ⚡</h1>
+    <div class="version">UPGRADED VERSION 6.0 • 700+ EXTENSIONS • HUB: jigsi_karia</div>
+    <div class="visitor-counter">
+        <span class="vc-dot"></span>
+        <span>PORTAL VISITS: <b id="visitCount">0</b></span>
+    </div>
+
+    <!-- Notice Banner -->
+    <div class="illegal-notice" id="noticeBanner">
+        <span>⚠️ <b>NOTICE:</b> Do not use this site for any illegal activities! This dashboard is structured explicitly for cyber security verification and data intelligence research.</span>
+        <button class="notice-btn" onclick="acknowledgeNotice()">I AGREE & CONFIRM</button>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-box">
+        <span class="search-icon">💀</span>
+        <input type="text" id="keywordInput" class="search-input" value="confidential" placeholder="ટાર્ગેટ કીવર્ડ અથવા ફાઈલનું નામ લખો..." onkeypress="if(event.key === 'Enter') event.preventDefault();" onfocus="openHistory()" />
+        <button class="copy-btn" id="copyBtn" onclick="copyTarget()" title="Copy target">📋</button>
+        <div class="search-history" id="searchHistory">
+            <div class="sh-header">
+                <span>Recent Targets</span>
+                <button class="sh-clear" onclick="clearHistory()">CLEAR ALL</button>
+            </div>
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+    <!-- PRO ACTIONS CONTROL ENGINE -->
+    <div class="pro-action-hub">
+        <button class="pro-btn btn-buy-pro" onclick="window.open('https://wa.me/919898048483', '_blank')">⚡ BUY NOW PRO (APPOINTMENT)</button>
+        <button class="pro-btn btn-donate" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLScJ7WjuxEXqdoSlUtxN7NQ8UeKpbEAeA9iIO-IXOmBmYzlLHQ/viewform?usp=sharing&ouid=116676179363878319046', '_blank')">🪙 DONATION SYSTEM</button>
+        <button class="pro-btn btn-store" onclick="window.open('https://wa.me/c/919898048483', '_blank')">🛒 OFFICIAL DIGITAL STORE</button>
+    </div>
+
+    <!-- Stats Counter Row -->
+    <div class="stats-row">
+        <div class="stat-card"><div class="stat-num" id="totalTools">700+</div><div class="stat-label">Total Extensions</div></div>
+        <div class="stat-card"><div class="stat-num" id="totalCats">15</div><div class="stat-label">Categories</div></div>
+        <div class="stat-card"><div class="stat-num" id="apiReady">100%</div><div class="stat-label">Google Ready</div></div>
+        <div class="stat-card"><div class="stat-num" id="freeTools">FREE</div><div class="stat-label">Access</div></div>
+    </div>
+
+    <!-- Live Filter Extensions -->
+    <div class="filter-container">
+        <input type="text" id="extFilterInput" class="filter-input" placeholder="🔍 ફાઈલ એક્સટેન્શન ફિલ્ટર કરો (દા.ત. pdf, apk, zip)..." onkeyup="filterExtensions()" />
+    </div>
+
+    <!-- DYNAMIC CATEGORY BUTTONS CONTAINER -->
+    <div id="categoriesContainer"></div>
+
+</div>
+
+<script>
+// ==================== MATRIX CANVAS ====================
+(function() {
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    let w,h;
+    function resize() { w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
+
+    const cols = Math.floor(w / 18);
+    const drops = Array(cols).fill(1);
+    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}[]|;:,.<>?";
+
+    function draw() {
+        ctx.fillStyle = 'rgba(0,0,0,0.04)';
+        ctx.fillRect(0,0,w,h);
+        ctx.fillStyle = '#00ff66';
+        ctx.font = '18px monospace';
+        for (let i=0; i<drops.length; i++) {
+            const text = chars[Math.floor(Math.random()*chars.length)];
+            const x = i * 18;
+            const y = drops[i] * 18;
+            ctx.fillText(text, x, y);
+            if (y > h && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        }
+    }
+    setInterval(draw, 35);
+})();
+
+// ==================== SAFE STORAGE ====================
+const _memStore = {};
+const safeStorage = {
+    getItem(k) { try { return localStorage.getItem(k); } catch(e) { return _memStore[k] || null; } },
+    setItem(k, v) { try { localStorage.setItem(k, v); } catch(e) { _memStore[k] = v; } }
+};
+
+// ==================== AUTH SYSTEM ====================
+function toggleAuth(showSignup) {
+    document.getElementById('loginBox').style.display = showSignup ? 'none' : 'block';
+    document.getElementById('signupBox').style.display = showSignup ? 'block' : 'none';
+}
+
+function handleSignup() {
+    const u = document.getElementById('regUser').value.trim();
+    const p = document.getElementById('regPass').value.trim();
+    if (!u || !p) return alert('કૃપા કરીને યુઝરનેમ અને પાસવર્ડ આપો!');
+    safeStorage.setItem('gate_user', u);
+    safeStorage.setItem('gate_pass', p);
+    alert('✅ રજીસ્ટ્રેશન સફળ! હવે લોગિન કરો.');
+    toggleAuth(false);
+}
+
+function handleLogin() {
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value.trim();
+    const storedU = safeStorage.getItem('gate_user') || 'admin';
+    const storedP = safeStorage.getItem('gate_pass') || 'admin';
+    if (u === storedU && p === storedP) {
+        document.getElementById('authOverlay').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        incrementVisitCount();
+        render700Extensions();
+    } else {
+        alert('❌ ખોટું યુઝરનેમ અથવા પાસવર્ડ!');
+    }
+}
+
+function incrementVisitCount() {
+    let count = parseInt(safeStorage.getItem('visit_count') || '0') + 1;
+    safeStorage.setItem('visit_count', count.toString());
+    document.getElementById('visitCount').textContent = count;
+}
+
+function acknowledgeNotice() {
+    document.getElementById('noticeBanner').style.display = 'none';
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    const btn = document.getElementById('themeToggle');
+    btn.textContent = document.body.classList.contains('light-mode') ? '🌙 DARK MODE' : '☀ LIGHT MODE';
+}
+
+// ==================== SEARCH HISTORY & COPY ====================
+function getHistory() { try { return JSON.parse(safeStorage.getItem('search_history') || '[]'); } catch(e) { return []; } }
+function saveHistory(list) { safeStorage.setItem('search_history', JSON.stringify(list)); }
+function addToHistory(query) {
+    if (!query) return;
+    let list = getHistory().filter(h => h !== query);
+    list.unshift(query);
+    if (list.length > 10) list = list.slice(0, 10);
+    saveHistory(list);
+}
+function renderHistory() {
+    const list = getHistory();
+    const el = document.getElementById('historyList');
+    if (!el) return;
+    if (list.length === 0) { el.innerHTML = '<div class="sh-item" style="color:rgba(0,255,0,0.3);cursor:default;">No recent targets</div>'; return; }
+    el.innerHTML = '';
+    list.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'sh-item';
+        div.innerHTML = '<span class="sh-icon">&#9656;</span><span>' + item + '</span>';
+        div.onclick = () => { document.getElementById('keywordInput').value = item; closeHistory(); };
+        el.appendChild(div);
+    });
+}
+function openHistory() { renderHistory(); document.getElementById('searchHistory').classList.add('open'); }
+function closeHistory() { document.getElementById('searchHistory').classList.remove('open'); }
+function clearHistory() { saveHistory([]); renderHistory(); closeHistory(); }
+
+function copyTarget() {
+    const val = document.getElementById('keywordInput').value.trim();
+    if (!val) return;
+    navigator.clipboard.writeText(val);
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✔';
+    setTimeout(() => { btn.textContent = '📋'; }, 1500);
+}
+
+// ==================== GOOGLE EXTENSION SEARCH ENGINE ====================
+function triggerGoogleSearch(ext) {
+    let query = document.getElementById('keywordInput').value.trim();
+    if (!query) {
+        alert("મહેરબાની કરીને સર્ચ માટે કીવર્ડ ટાઈપ કરો!");
+        return;
+    }
+    addToHistory(query);
+    let googleUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}+filetype:${ext}`;
+    window.open(googleUrl, '_blank');
+}
+
+// ==================== 700+ EXTENSIONS DATABASE & RENDERER ====================
+const extensionCategories = {
+    "🖼️ Images & Graphics (ઈમેજ ફાઈલો)": [
+        "jpg", "jpeg", "png", "gif", "bmp", "svg", "webp", "tiff", "tif", "ico", "psd", "ai", "eps", "raw", "cr2", "nef", 
+        "orf", "sr2", "heic", "heif", "avif", "ind", "indd", "indt", "jp2", "jpx", "j2k", "j2c", "wdp", "hdp", "dng", "arw", 
+        "rw2", "pef", "raf", "3fr", "dcr", "k25", "kdc", "mrw", "nrw", "ptx", "r3d", "rwl", "rwz", "x3f", "ai", "cdr", "cgm", 
+        "dxf", "eva", "emf", "wmf", "emf", "art", "blp", "cd5", "cit", "cpt", "cut", "dds", "dib", "djvu", "egt", "exr", "fal", 
+        "gbr", "xcf", "fpx", "ggr", "lbm", "pbm", "pgm", "ppm", "pnm", "pcx", "pgf", "pict", "pntg", "pix", "psb", "pdd", "psp"
+    ],
+    "📄 Documents & Text (દસ્તાવેજો અને લખાણ)": [
+        "pdf", "doc", "docx", "txt", "rtf", "odt", "ott", "oth", "odm", "pages", "xps", "oxps", "tex", "wpd", "wps", "abt", 
+        "ans", "asc", "ascii", "bib", "charset", "dtp", "epub", "gdoc", "mobi", "azw3", "chm", "djvu", "lit", "fb2", "log", 
+        "msg", "rst", "sdw", "stw", "sxw", "tex", "info", "me", "1st", "sub", "man", "nfo", "pod", "markdown", "md", "text", 
+        "fdx", "fountain", "gnm", "mcm", "pda", "ps", "sam", "fdb", "vce", "note", "tdf", "abw", "docm", "dot", "dotx", "dotm"
+    ],
+    "📊 Spreadsheets & Data (એક્સલ અને ડેટા સીટ)": [
+        "xls", "xlsx", "xlsm", "xlsb", "xltx", "xltm", "csv", "tsv", "ods", "ots", "numbers", "sdc", "stc", "sxc", "wk1", 
+        "wk3", "wk4", "wks", "123", "wq1", "wq2", "xlw", "xlr", "dbf", "dif", "slk", "gsheet", "eth", "fcs", "gnumeric", "qpw"
+    ],
+    "🖥️ Presentations (પ્રેઝન્ટેશન ફાઈલો)": [
+        "ppt", "pptx", "pptm", "pps", "ppsx", "ppsm", "pot", "potx", "potm", "odp", "otp", "gslides", "key", "sdd", "sti", 
+        "sxi", "pez", "sow", "prz", "shw", "dpa", "dpg", "vcards"
+    ],
+    "🎥 Video & Media (વિડીયો અને મુવીઝ)": [
+        "mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "m4v", "mpg", "mpeg", "3gp", "3g2", "vob", "ogv", "m2ts", "mts", 
+        "ts", "asf", "rm", "rmvb", "divx", "xvid", "f4v", "f4p", "f4a", "f4b", "roq", "svi", "mxf", "roq", "nsv", "drc", "gifv"
+    ],
+    "🎵 Audio & Sound (ઓડિયો અને મ્યુઝિક)": [
+        "mp3", "wav", "aac", "flac", "ogg", "wma", "m4a", "alac", "aiff", "pcm", "opus", "amr", "mid", "midi", "ra", "ram", 
+        "au", "3ga", "ac3", "caf", "dts", "m4b", "m4p", "oga", "voc", "wv", "weba", "cda", "gsm", "mka"
+    ],
+    "📦 Archives & Compressed (ઝીપ અને પેક ફાઈલો)": [
+        "zip", "rar", "7z", "tar", "gz", "bz2", "xz", "iso", "cab", "lz", "lzma", "lzh", "arj", "z", "ace", "apk", "tgz", 
+        "tbz2", "tlz", "txz", "zipx", "sit", "sitx", "sea", "shar", "mar", "pax", "war", "ear", "sar", "phar", "cpio"
+    ],
+    "⚙️ Executable & Systems (સોફ્ટવેર અને સિસ્ટમ)": [
+        "exe", "msi", "bat", "cmd", "sh", "bin", "app", "dmg", "deb", "rpm", "jar", "gadget", "com", "vbs", "ps1", "wsf", 
+        "scr", "drv", "sys", "dll", "so", "dylib", "cpl", "inf", "reg", "icns", "elf", "cgi", "pl", "run", "out", "aab"
+    ],
+    "🌐 Web & Code (પ્રોગ્રામિંગ અને કોડ)": [
+        "html", "htm", "css", "js", "ts", "json", "xml", "php", "py", "java", "c", "cpp", "cs", "rb", "go", "swift", "kt", 
+        "sql", "asp", "aspx", "jsp", "xhtml", "vue", "jsx", "tsx", "less", "scss", "sass", "yaml", "yml", "ini", "env", "config"
+    ],
+    "🗄️ Database Files (ડેટાબેઝ ફાઈલો)": [
+        "db", "sqlite", "sqlite3", "mdb", "accdb", "sql", "sdf", "sqlitedb", "dbf", "myd", "myi", "ibd", "fdb", "gdb", "pdb"
+    ],
+    "📐 CAD & 3D Design (3D મોડેલિંગ)": [
+        "dwg", "dxf", "stl", "obj", "fbx", "3ds", "blend", "dae", "ply", "iges", "step", "stp", "max", "ma", "mb", "skp"
+    ],
+    "🔤 Fonts & Typography (ફોન્ટ ફાઈલો)": [
+        "ttf", "otf", "woff", "woff2", "eot", "fon", "fnt", "pfb", "pfm", "afm"
+    ],
+    "🔐 Security & Crypto (સિક્યોરિટી ફાઈલો)": [
+        "crt", "cer", "pem", "der", "pfx", "p12", "csr", "gpg", "pgp", "key", "asc", "ovpn"
+    ],
+    "🎮 Game Files (ગેમ ફાઈલો)": [
+        "pak", "vpk", "gam", "sav", "rom", "nes", "sfc", "gba", "gbc", "nds", "iso", "bin", "cue"
+    ]
+};
+
+function render700Extensions() {
+    const container = document.getElementById('categoriesContainer');
+    container.innerHTML = '';
+    let count = 0;
+
+    for (let [catTitle, extList] of Object.entries(extensionCategories)) {
+        let catDiv = document.createElement('div');
+        catDiv.className = 'category-section';
+
+        let titleEl = document.createElement('div');
+        titleEl.className = 'category-title';
+        titleEl.textContent = catTitle + ` (${extList.length})`;
+        catDiv.appendChild(titleEl);
+
+        let gridDiv = document.createElement('div');
+        gridDiv.className = 'buttons-grid';
+
+        extList.forEach(ext => {
+            count++;
+            let btn = document.createElement('button');
+            btn.className = 'engine-btn';
+            btn.setAttribute('data-ext', ext);
+            btn.textContent = `.${ext}`;
+            btn.onclick = () => triggerGoogleSearch(ext);
+            gridDiv.appendChild(btn);
+        });
+
+        catDiv.appendChild(gridDiv);
+        container.appendChild(catDiv);
+    }
+    document.getElementById('totalTools').textContent = count + "+";
+}
+
+// Live Filter function
+function filterExtensions() {
+    let filter = document.getElementById('extFilterInput').value.toLowerCase().trim();
+    let buttons = document.querySelectorAll('.engine-btn');
+
+    buttons.forEach(btn => {
+        let ext = btn.getAttribute('data-ext');
+        if (ext.toLowerCase().includes(filter)) {
+            btn.style.display = "inline-block";
+        } else {
+            btn.style.display = "none";
+        }
+    });
+}
+</script>
+</body>
+</html>
