@@ -1,416 +1,413 @@
 <!DOCTYPE html>
-<html lang="gu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberDork Pro - Advanced Multi-Engine Dorking Portal</title>
-    <style>
-        :root {
-            --bg-color: #0a0e17;
-            --card-bg: #111827;
-            --accent-color: #00f0ff;
-            --text-color: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border-color: #1e293b;
-            --hover-color: #00f0ff22;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
-        }
-
-        header h1 {
-            color: var(--accent-color);
-            font-size: 2.2rem;
-            letter-spacing: 1px;
-        }
-
-        header p {
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
-
-        /* Top Control Panel */
-        .control-panel {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .search-box-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-box-group input {
-            flex: 1;
-            padding: 12px 15px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-color);
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .search-box-group input:focus {
-            border-color: var(--accent-color);
-        }
-
-        .engine-selector {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .engine-selector label {
-            font-weight: bold;
-            color: var(--accent-color);
-        }
-
-        .engine-btn {
-            padding: 8px 14px;
-            border-radius: 5px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-color);
-            color: var(--text-color);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .engine-btn.active, .engine-btn:hover {
-            background: var(--accent-color);
-            color: #000;
-            font-weight: bold;
-        }
-
-        /* Category Tabs */
-        .category-tabs {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 20px;
-        }
-
-        .tab-btn {
-            padding: 10px 18px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            border-radius: 6px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .tab-btn.active {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 10px var(--accent-color);
-        }
-
-        /* Dork Buttons Grid */
-        .dork-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 12px;
-        }
-
-        .dork-btn {
-            padding: 12px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            border-radius: 6px;
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .dork-btn:hover {
-            background: var(--hover-color);
-            border-color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        .dork-btn span.title {
-            font-weight: bold;
-            font-size: 0.95rem;
-            margin-bottom: 5px;
-        }
-
-        .dork-btn span.tag {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        /* Counter */
-        .stats {
-            margin-bottom: 15px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-    </style>
+    <title>CyberDork OSINT Suite v7.0 - Ultimate Matrix Edition</title>
+    <meta name="description" content="CyberDork OSINT Suite v7.0 - 1000+ Dorks, 700+ File Extensions, Multi-Engine Search, OSINT Toolkit. For authorized security research & education only.">
+    <meta name="theme-color" content="#00ff00">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
 </head>
 <body>
 
-    <header>
-        <h1>⚡ CyberDork Pro Search Portal</h1>
-        <p>1000+ Dork Commands across Multiple Search Engines</p>
-    </header>
+<canvas id="matrix-canvas"></canvas>
 
-    <div class="control-panel">
-        <div class="search-box-group">
-            <input type="text" id="targetQuery" placeholder="તમારો સર્ચ કીવર્ડ ટાઈપ કરો (દા.ત. Python Course, Movie Name)...">
+<!-- ==================== AUTH OVERLAY ==================== -->
+<div class="auth-overlay" id="authOverlay">
+    <div class="auth-box" id="loginBox">
+        <h2>🔐 CYBERDORK SECURE PORTAL</h2>
+        <input type="text" id="loginUser" placeholder="Enter username (e.g. admin)">
+        <input type="password" id="loginPass" placeholder="Enter password">
+        <button onclick="handleLogin()">🚀 PORTAL ACCESS (LOGIN)</button>
+        <span class="auth-toggle" onclick="toggleAuth(true)">Create new credential (Sign Up)</span>
+        <div class="auth-hint">Hint: first-time users can <b>Sign Up</b> or use <b>Guest Mode</b>.</div>
+        <button style="background:#00bcff;color:#000;margin-top:6px" onclick="handleGuestLogin()">👤 GUEST ACCESS</button>
+    </div>
+    <div class="auth-box" id="signupBox" style="display:none;">
+        <h2>📝 REGISTER HACKER ID</h2>
+        <input type="text" id="regUser" placeholder="Choose a username">
+        <input type="password" id="regPass" placeholder="Set a safe password">
+        <button onclick="handleSignup()">💾 SAVE & REGISTER (SIGN UP)</button>
+        <span class="auth-toggle" onclick="toggleAuth(false)">Already have an ID? Login</span>
+    </div>
+</div>
+
+<!-- ==================== APP SHELL ==================== -->
+<div id="appShell" style="display:none">
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a class="brand" href="#" onclick="showPage('page-dashboard')">
+            <div class="brand-logo">💀</div>
+            <div class="brand-text">CYBERDORK OSINT SUITE <small>v7.0 • ULTIMATE MATRIX EDITION</small></div>
+        </a>
+        <nav class="top-nav" id="topNav">
+            <a data-page="page-dashboard" class="active" onclick="showPage('page-dashboard')">⚡ DASHBOARD</a>
+            <a data-page="page-dorks" onclick="showPage('page-dorks')">🎯 DORK ENGINE</a>
+            <a data-page="page-extensions" onclick="showPage('page-extensions')">🔍 EXTENSION HUB</a>
+            <a data-page="page-builder" onclick="showPage('page-builder')">🛠️ OSINT TOOLKIT</a>
+            <a data-page="page-terminal" onclick="showPage('page-terminal')">💻 TERMINAL</a>
+            <a data-page="page-pro" onclick="showPage('page-pro')">🛒 PRO HUB</a>
+            <a data-page="page-auth" onclick="showPage('page-auth')">🔐 SESSION</a>
+        </nav>
+        <div class="top-utils">
+            <button class="icon-btn" id="sfxToggle" title="Toggle sound">🔊 SFX ON</button>
+            <button class="icon-btn" id="themeToggle" onclick="toggleTheme()">☀ LIGHT</button>
+            <button class="icon-btn" onclick="handleLogout()">⏻ LOGOUT</button>
         </div>
-        
-        <div class="engine-selector">
-            <label>Search Engine:</label>
-            <button class="engine-btn active" onclick="setEngine('google')">Google</button>
-            <button class="engine-btn" onclick="setEngine('bing')">Bing</button>
-            <button class="engine-btn" onclick="setEngine('duckduckgo')">DuckDuckGo</button>
-            <button class="engine-btn" onclick="setEngine('yandex')">Yandex</button>
-            <button class="engine-btn" onclick="setEngine('shodan')">Shodan</button>
+    </div>
+
+    <!-- Threat Feed Ticker -->
+    <div class="threat-ticker">
+        <div class="ticker-inner" id="tickerInner"></div>
+    </div>
+
+    <!-- Notice Banner -->
+    <div class="notice-banner" id="noticeBanner">
+        <span>⚠️ <b>NOTICE:</b> This dashboard is for authorized cyber security research, verification, and OSINT education ONLY. Do not use for any illegal activity.</span>
+        <button class="notice-btn" onclick="acknowledgeNotice()">I AGREE & CONFIRM</button>
+    </div>
+
+    <!-- ========== PAGE 1: DASHBOARD ========== -->
+    <div class="page active" id="page-dashboard">
+        <h1 class="page-title">⚡ DASHBOARD & QUICK OSINT RADAR</h1>
+        <p class="page-sub">Real-time intelligence surface • Matrix rain active</p>
+
+        <div class="stats-row">
+            <div class="stat-card"><div class="stat-num" id="statDorks">0</div><div class="stat-label">Dork Commands</div></div>
+            <div class="stat-card"><div class="stat-num" id="statExts">0</div><div class="stat-label">File Extensions</div></div>
+            <div class="stat-card"><div class="stat-num">7</div><div class="stat-label">Search Engines</div></div>
+            <div class="stat-card"><div class="stat-num" id="statCats">0</div><div class="stat-label">Extension Categories</div></div>
+            <div class="stat-card"><div class="stat-num" id="liveSession">0</div><div class="stat-label">Active Sessions</div></div>
+        </div>
+
+        <div class="glass-panel">
+            <div class="section-title">🛰️ TARGET INTELLIGENCE RADAR</div>
+            <div class="row mb">
+                <input type="text" class="form-input" id="dashTarget" value="9898048483" placeholder="Enter target phone / domain / username...">
+            </div>
+            <div class="radar-grid">
+                <div class="radar-card">
+                    <div class="rc-icon">📱</div>
+                    <div class="rc-title">Phone Lookup</div>
+                    <p>Search phone-number intelligence & footprints</p>
+                    <button class="btn btn-green btn-sm" onclick="radarSearch('phone')">SCAN</button>
+                </div>
+                <div class="radar-card">
+                    <div class="rc-icon">🌐</div>
+                    <div class="rc-title">Domain OSINT</div>
+                    <p>Enumerate site scope, subdomains & assets</p>
+                    <button class="btn btn-blue btn-sm" onclick="radarSearch('domain')">SCAN</button>
+                </div>
+                <div class="radar-card">
+                    <div class="rc-icon">👤</div>
+                    <div class="rc-title">Social Footprinting</div>
+                    <p>Discover linked social media profiles</p>
+                    <button class="btn btn-purple btn-sm" onclick="radarSearch('social')">SCAN</button>
+                </div>
+                <div class="radar-card">
+                    <div class="rc-icon">🗂️</div>
+                    <div class="rc-title">Leaked Data Check</div>
+                    <p>Verify exposure across public indexes</p>
+                    <button class="btn btn-pink btn-sm" onclick="radarSearch('leak')">SCAN</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel">
+            <div class="section-title">🟢 MATRIX RAIN CONTROL</div>
+            <div class="row">
+                <button class="btn btn-ghost" id="matrixPause" onclick="matrixTogglePause()">⏸ PAUSE</button>
+                <button class="btn btn-ghost" id="matrixSpeed" onclick="matrixCycleSpeed()">SPEED: NORMAL</button>
+                <span class="spacer"></span>
+                <div class="visitor-counter" style="display:inline-flex;gap:8px;align-items:center">
+                    <span style="color:rgba(0,255,0,0.6);font-size:13px">PORTAL VISITS: <b id="visitCount" style="color:#00ff00">0</b></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel">
+            <div class="section-title">🚀 SUPER MULTI-SEARCH MATRIX</div>
+            <p class="page-sub">One click launches Google + Bing + DuckDuckGo + Yandex + Shodan simultaneously for the target.</p>
+            <div class="row">
+                <input type="text" class="form-input" id="superMultiInput" value="9898048483" placeholder="Keyword / target...">
+                <button class="btn btn-green" onclick="runFullMatrix()">🚀 LAUNCH 5-ENGINE MATRIX</button>
+            </div>
         </div>
     </div>
 
-    <div class="category-tabs" id="categoryContainer">
-        <!-- JS દ્વારા કેટેગરી બટન્સ લોડ થશે -->
+    <!-- ========== PAGE 2: CYBERDORK PRO ENGINE ========== -->
+    <div class="page" id="page-dorks">
+        <h1 class="page-title">🎯 CYBERDORK PRO ENGINE</h1>
+        <p class="page-sub">1000+ dork commands across multiple search engines • auto-appended with target</p>
+
+        <div class="glass-panel">
+            <div class="row mb">
+                <input type="text" class="form-input" id="dorkTarget" value="9898048483" placeholder="Target keyword...">
+                <input type="text" class="form-input" id="dorkSearch" oninput="renderDorks()" placeholder="🔍 Live filter dorks (title / dork / category)...">
+            </div>
+            <div class="engine-selector mb">
+                <label>ENGINE:</label>
+                <button class="engine-btn active" onclick="setEngine('google', this)">Google</button>
+                <button class="engine-btn" onclick="setEngine('bing', this)">Bing</button>
+                <button class="engine-btn" onclick="setEngine('duckduckgo', this)">DuckDuckGo</button>
+                <button class="engine-btn" onclick="setEngine('yandex', this)">Yandex</button>
+                <button class="engine-btn" onclick="setEngine('shodan', this)">Shodan</button>
+                <button class="engine-btn" onclick="setEngine('ecosia', this)">Ecosia</button>
+                <button class="engine-btn" onclick="setEngine('startpage', this)">Startpage</button>
+                <span class="spacer"></span>
+                <button class="btn btn-sm btn-ghost" onclick="clearDorkFilters()">✕ CLEAR FILTER</button>
+                <button class="btn btn-sm btn-ghost" onclick="exportDorksJSON()">⬇ JSON</button>
+                <button class="btn btn-sm btn-ghost" onclick="exportDorksCSV()">⬇ CSV</button>
+            </div>
+        </div>
+
+        <div class="category-tabs" id="dorkCategoryTabs"></div>
+        <div class="stats-counter" id="dorkStats"></div>
+        <div class="dork-grid" id="dorkGrid"></div>
     </div>
 
-    <div class="stats" id="statsCounter">Loading buttons...</div>
+    <!-- ========== PAGE 3: EXTENSION HUB ========== -->
+    <div class="page" id="page-extensions">
+        <h1 class="page-title">🔍 700+ FILE EXTENSION INTELLIGENCE HUB</h1>
+        <p class="page-sub">Complete extension database grouped into 15 categories • instant live search • direct Google filetype trigger</p>
 
-    <div class="dork-grid" id="dorkGrid">
-        <!-- JS દ્વારા ૫૦૦+ થી ૧૦૦૦+ ડોર્ક બટન્સ ડાયનેમિક લોડ થશે -->
+        <div class="glass-panel">
+            <div class="row mb">
+                <input type="text" class="form-input" id="extSearchKeyword" value="9898048483" placeholder="Search keyword for filetype: queries...">
+                <button class="btn btn-green" onclick="triggerExtSearch(document.getElementById('extQuickSearch').value.replace(/^\./,'') || 'pdf')">🔍 GOOGLE FILETYPE SEARCH</button>
+            </div>
+            <div class="row">
+                <input type="text" class="form-input" id="extQuickSearch" placeholder="Type extension e.g. pdf, apk, env, sql, mkv">
+                <button class="btn btn-blue" onclick="findExtInHub()">🎯 FIND IN HUB</button>
+                <input type="text" class="form-input" id="extFilter" oninput="filterExtensions()" placeholder="🔍 Live filter extensions (e.g. pdf, apk, env)...">
+            </div>
+            <div class="stats-counter mt" id="extStats"></div>
+        </div>
+
+        <div id="extCategories"></div>
     </div>
-<script>
-       // ૧. સર્ચ એન્જિન URLs
-        const searchEngines = {
-            google: 'https://www.google.com/search?q=',
-            bing: 'https://www.bing.com/search?q=',
-            duckduckgo: 'https://duckduckgo.com/?q=',
-            yandex: 'https://yandex.com/search/?text=',
-            shodan: 'https://www.shodan.io/search?query='
-        };
 
-        let selectedEngine = 'google';
-        let activeCategory = 'all';
-        let favorites = JSON.parse(localStorage.getItem('dorkFavorites')) || [];
+    <!-- ========== PAGE 4: OSINT TOOLKIT & DORK BUILDER ========== -->
+    <div class="page" id="page-builder">
+        <h1 class="page-title">🛠️ ADVANCED OSINT TOOLKIT & DORK BUILDER</h1>
+        <p class="page-sub">Visual query assembly • hash identification • instant intelligence stack launcher</p>
 
-       // ૨. એક્સપાન્ડેડ ડોર્ક ડેટાબેઝ (૧૦૦૦+ બટન્સ સપોર્ટેડ મોડ્યુલ)
-        const dorksData = [
-            // ☁️ Cloud & File Storage
-            { title: "Google Drive Direct Files", category: "cloud", dork: 'site:drive.google.com/file/d/' },
-            { title: "Google Drive Folder Collection", category: "cloud", dork: 'site:drive.google.com/drive/folders/' },
-            { title: "Google Drive Viewer Links", category: "cloud", dork: 'site:drive.google.com/open?id=' },
-            { title: "Mega Direct Files", category: "cloud", dork: 'site:mega.nz/file/' },
-            { title: "Mega Folder Repos", category: "cloud", dork: 'site:mega.nz/folder/' },
-            { title: "Dropbox Shared Directory", category: "cloud", dork: 'site:dropbox.com/s/' },
-            { title: "Dropbox Folder Hub", category: "cloud", dork: 'site:dropbox.com/sh/' },
-            { title: "OneDrive Public Drives", category: "cloud", dork: 'site:onedrive.live.com' },
-            { title: "OneDrive 1drv Links", category: "cloud", dork: 'site:1drv.ms' },
-            { title: "MediaFire Direct Files", category: "cloud", dork: 'site:mediafire.com/file' },
-            { title: "TeraBox Public Share", category: "cloud", dork: 'site:terabox.com/sharing/' },
-            { title: "Box.com Public Links", category: "cloud", dork: 'site:app.box.com/s/' },
-            { title: "WeTransfer Transfers", category: "cloud", dork: 'site:wetransfer.com/downloads/' },
-            { title: "Zippyshare Archives", category: "cloud", dork: 'site:zippyshare.com' },
-
-            // 📚 Documents, Books & Research
-            { title: "PDF Documents & Books", category: "docs", dork: 'filetype:pdf site:drive.google.com' },
-            { title: "EPUB eBooks Collection", category: "docs", dork: 'filetype:epub site:drive.google.com' },
-            { title: "MOBI Kindle Books", category: "docs", dork: 'filetype:mobi site:drive.google.com' },
-            { title: "PowerPoint Presentations", category: "docs", dork: 'filetype:ppt OR filetype:pptx' },
-            { title: "Word Documents (.docx)", category: "docs", dork: 'filetype:doc OR filetype:docx' },
-            { title: "Excel Workbooks (.xlsx)", category: "docs", dork: 'filetype:xls OR filetype:xlsx' },
-            { title: "CSV Data Tables", category: "docs", dork: 'filetype:csv' },
-            { title: "RTF Text Files", category: "docs", dork: 'filetype:rtf' },
-            { title: "Research Papers (Academia)", category: "docs", dork: 'site:academia.edu filetype:pdf' },
-            { title: "Research Papers (ResearchGate)", category: "docs", dork: 'site:researchgate.net filetype:pdf' },
-
-            // 💻 Software, Source Code & Apps
-            { title: "ZIP Software Archives", category: "software", dork: '(ext:zip OR ext:rar) site:drive.google.com' },
-            { title: "7Z Compressed Packs", category: "software", dork: 'ext:7z site:drive.google.com' },
-            { title: "Android APK Applications", category: "software", dork: 'ext:apk site:drive.google.com' },
-            { title: "Android Modded Apps", category: "software", dork: '"mod apk" site:mediafire.com' },
-            { title: "Windows Installers (EXE)", category: "software", dork: 'filetype:exe site:drive.google.com' },
-            { title: "ISO Disk Images", category: "software", dork: 'filetype:iso' },
-            { title: "GitHub Public Source", category: "software", dork: 'site:github.com' },
-            { title: "GitLab Repositories", category: "software", dork: 'site:gitlab.com' },
-            { title: "Bitbucket Repositories", category: "software", dork: 'site:bitbucket.org' },
-            { title: "SourceForge Downloads", category: "software", dork: 'site:sourceforge.net' },
-
-            // 📁 Open Server Directories (Index Of)
-            { title: "Index Of - Open Root", category: "directory", dork: 'intitle:"index.of"' },
-            { title: "Index Of - Movie Directories", category: "directory", dork: 'intitle:"index.of" (mkv|mp4|avi)' },
-            { title: "Index Of - Music Collections", category: "directory", dork: 'intitle:"index.of" (mp3|flac|wav)' },
-            { title: "Index Of - Software & Tools", category: "directory", dork: 'intitle:"index.of" (exe|iso|zip)' },
-            { title: "Index Of - Book Repositories", category: "directory", dork: 'intitle:"index.of" (pdf|epub|mobi)' },
-            { title: "Index Of - Parent Directory", category: "directory", dork: 'intitle:"index of" "parent directory"' },
-            { title: "Apache Public Indexes", category: "directory", dork: 'intitle:"index of" "Apache/2.4"' },
-
-            // 🎬 Media, Movies & Audio
-            { title: "MKV HD Movies / Clips", category: "media", dork: 'ext:mkv site:drive.google.com' },
-            { title: "MP4 Video Collections", category: "media", dork: 'ext:mp4 site:mega.nz/folder/' },
-            { title: "FLAC Lossless Music", category: "media", dork: 'ext:flac site:drive.google.com' },
-            { title: "MP3 Audiobooks & Albums", category: "media", dork: 'ext:mp3 site:drive.google.com' },
-            { title: "RAW High-Res Images", category: "media", dork: '(ext:cr2 OR ext:nef OR ext:arw)' },
-            { title: "Subtitles (.SRT)", category: "media", dork: 'filetype:srt' },
-
-            // 🔒 Security, OSINT & Config Dorks
-            { title: "Environment Configs (.env)", category: "security", dork: 'filetype:env "DB_PASSWORD"' },
-            { title: "System Log Files (.log)", category: "security", dork: 'filetype:log "error"' },
-            { title: "SQL Database Dumps", category: "security", dork: 'filetype:sql "INSERT INTO"' },
-            { title: "Config Files (.json/.xml)", category: "security", dork: 'filetype:json OR filetype:xml "password"' },
-            { title: "Pastebin Leaks & Notes", category: "security", dork: 'site:pastebin.com' },
-            { title: "Control Panel Indexes", category: "security", dork: 'intitle:"cPanel" "login"' },
-            { title: "Webcam / Live Stream Feeds", category: "security", dork: 'inurl:"view/index.shtml"' }
-        ];
-
-        // ૨. કેટેગરી લિસ્ટ
-        const categories = [
-            { id: 'all', name: '⚡ All Dorks' },
-            { id: 'fav', name: '⭐️ Favorites' },
-            { id: 'cloud', name: '☁️ Cloud Storage' },
-            { id: 'docs', name: '📚 Documents & PDFs' },
-            { id: 'software', name: '💻 Apps & Software' },
-            { id: 'directory', name: '📁 Open Directories' },
-            { id: 'media', name: '🎬 Media & Videos' },
-            { id: 'security', name: '🔒 Security & Configs' }
-        ];
-
-        // ૩. કેટેગરી બટન્સ રેન્ડર કરવા
-        function renderCategories() {
-            const container = document.getElementById('categoryContainer');
-            container.innerHTML = categories.map(cat => 
-                `<button class="tab-btn ${cat.id === activeCategory ? 'active' : ''}" onclick="filterCategory('${cat.id}')">${cat.name}</button>`
-            ).join('');
-        }
-
-        // ૪. ડોર્ક બટન્સ રેન્ડર કરવા (લાઈવ ફિલ્ટર અને ફેવરિટ્સ સાથે)
-        function renderDorks() {
-            const grid = document.getElementById('dorkGrid');
-            const searchKeyword = document.getElementById('targetQuery').value.toLowerCase().trim();
-
-            let filtered = dorksData;
-
-            // કેટેગરી ફિલ્ટર
-            if (activeCategory === 'fav') {
-                filtered = dorksData.filter(d => favorites.includes(d.title));
-            } else if (activeCategory !== 'all') {
-                filtered = dorksData.filter(d => d.category === activeCategory);
-            }
-
-            // લાઈવ કીવર્ડ સર્ચ ફિલ્ટર
-            if (searchKeyword !== "") {
-                filtered = filtered.filter(d => 
-                    d.title.toLowerCase().includes(searchKeyword) || 
-                    d.dork.toLowerCase().includes(searchKeyword)
-                );
-            }
-
-            document.getElementById('statsCounter').innerText = `બતાવી રહ્યા છે: ${filtered.length} Dork Commands (કુલ: ${dorksData.length})`;
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 30px;">કોઈ ડોર્ક બટન મળ્યું નથી!</div>`;
-                return;
-            }
-
-            grid.innerHTML = filtered.map(item => {
-                const isFav = favorites.includes(item.title);
-                return `
-                    <div class="dork-btn">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="title" onclick="executeSearch('${encodeURIComponent(item.dork)}')">${item.title}</span>
-                            <span onclick="toggleFavorite('${item.title}', event)" style="cursor: pointer; font-size: 1.1rem;">${isFav ? '⭐️' : '☆'}</span>
-                        </div>
-                        <span class="tag" onclick="executeSearch('${encodeURIComponent(item.dork)}')">${item.dork.substring(0, 32)}...</span>
-                        <div style="margin-top: 8px; display: flex; gap: 5px;">
-                            <button style="flex: 1; padding: 4px; font-size: 0.75rem; background: var(--border-color); color: #fff; border: none; border-radius: 4px; cursor: pointer;" onclick="executeSearch('${encodeURIComponent(item.dork)}')">Run Search</button>
-                            <button style="padding: 4px 8px; font-size: 0.75rem; background: #ff4757; color: #fff; border: none; border-radius: 4px; cursor: pointer;" title="Google + Bing + DuckDuckGo માં એકસાથે ખોલો" onclick="multiEngineSearch('${encodeURIComponent(item.dork)}')">🚀 Multi</button>
-                        </div>
+        <div class="glass-panel">
+            <div class="section-title">🧩 VISUAL CUSTOM DORK BUILDER</div>
+            <div class="builder-row">
+                <div class="builder-control">
+                    <div class="bc-label">TARGET</div>
+                    <input type="text" id="builderTarget" value="9898048483" oninput="builderInputChanged()">
+                </div>
+                <div class="builder-control">
+                    <div class="bc-label">SITE: <input type="text" id="builderSite" placeholder="site:" oninput="builderInputChanged()" style="width:auto;margin-left:4px"></div>
+                </div>
+                <div class="builder-control">
+                    <div class="bc-label">FILETYPE: <input type="text" id="builderFiletype" placeholder="pdf / apk / env" oninput="builderInputChanged()" style="width:auto;margin-left:4px"></div>
+                </div>
+            </div>
+            <div class="builder-row">
+                <div class="builder-control">
+                    <div class="bc-label">INURL: <input type="text" id="builderInurl" placeholder="admin / login" oninput="builderInputChanged()" style="width:auto;margin-left:4px"></div>
+                </div>
+                <div class="builder-control">
+                    <div class="bc-label">INTITLE: <input type="text" id="builderIntitle" placeholder="index.of" oninput="builderInputChanged()" style="width:auto;margin-left:4px"></div>
+                </div>
+                <div class="builder-control">
+                    <div class="bc-label">EXT: <input type="text" id="builderExt" placeholder="zip / sql" oninput="builderInputChanged()" style="width:auto;margin-left:4px"></div>
+                </div>
+            </div>
+            <div class="builder-row">
+                <div class="builder-control">
+                    <div class="bc-label">EXCLUDE (-): <input type="text" id="builderExclude" placeholder="site / forum" oninput="builderInputChanged()" style="width:auto;margin-left:4px"></div>
+                </div>
+                <div class="builder-control">
+                    <div class="bc-label">WILDCARD (*): <input type="text" id="builderWildcard" placeholder="keyword" oninput="builderInputChanged()" style="width:auto;margin-left:4px"></div>
+                </div>
+                <div class="builder-control">
+                    <div class="bc-label">QUOTE TARGET</div>
+                    <div class="switch-row">
+                        <label class="switch"><input type="checkbox" id="builderQuote" onchange="builderInputChanged()"><span class="slider"></span></label>
+                        <span>Wrap target in " "</span>
                     </div>
-                `;
-            }).join('');
-        }
+                </div>
+            </div>
+            <div class="preview-box mb" id="builderPreview">// assembled query appears here</div>
+            <div class="row">
+                <input type="text" class="form-input" id="builderOutput" readonly>
+                <button class="btn btn-blue" onclick="DorkBuilder.copy()">📋 COPY</button>
+                <button class="btn btn-green" onclick="DorkBuilder.run()">▶ RUN</button>
+                <button class="btn btn-gold" onclick="DorkBuilder.runAll()">🚀 MULTI-RUN</button>
+            </div>
+        </div>
 
-        // ૫. ફેવરિટ બટન ટોગલ કરવું
-        function toggleFavorite(title, event) {
-            event.stopPropagation();
-            if (favorites.includes(title)) {
-                favorites = favorites.filter(item => item !== title);
-            } else {
-                favorites.push(title);
-            }
-            localStorage.setItem('dorkFavorites', JSON.stringify(favorites));
-            renderDorks();
-        }
+        <div class="glass-panel">
+            <div class="section-title">🔑 HASH IDENTIFIER & DECODER HELPER</div>
+            <div class="row">
+                <input type="text" class="form-input" id="hashInput" oninput="identifyHash()" placeholder="Paste a hash / token to identify (e.g. 5f4dcc3b5aa765d61d8327deb882cf99)">
+                <button class="btn btn-ghost" onclick="copyHashResult()">📋 COPY ANALYSIS</button>
+            </div>
+            <div class="preview-box mt" id="hashResult" style="color:#00ff00">Type a hash or string to analyze.</div>
+        </div>
 
-       // ૬. સર્ચ એન્જિન બદલવું
-        function setEngine(engine) {
-            selectedEngine = engine;
-            document.querySelectorAll('.engine-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
+        <div class="glass-panel">
+            <div class="section-title">🌍 IP / SUBDOMAIN / WHOIS QUICK-LAUNCHER</div>
+            <p class="page-sub">One-click intelligence stack for the target (default: 9898048483).</p>
+            <div class="row mb">
+                <input type="text" class="form-input" id="whoisInput" value="9898048483" placeholder="Domain / IP / phone...">
+                <button class="btn btn-blue" onclick="whoisLookup()">🔎 WHOIS LOOKUP</button>
+            </div>
+            <div class="quick-links">
+                <a class="ql-btn" href="javascript:openQuickLink('virustotal')">🛡 VirusTotal</a>
+                <a class="ql-btn" href="javascript:openQuickLink('censys')">📡 Censys</a>
+                <a class="ql-btn" href="javascript:openQuickLink('securitytrails')">🗺 SecurityTrails</a>
+                <a class="ql-btn" href="javascript:openQuickLink('wayback')">🕰 Wayback Machine</a>
+                <a class="ql-btn" href="javascript:openQuickLink('ipvoid')">🚫 IPVoid</a>
+                <a class="ql-btn" href="javascript:openQuickLink('centralops')">🛠 CentralOps</a>
+                <a class="ql-btn" href="javascript:openQuickLink('shodan')">💀 Shodan</a>
+                <a class="ql-btn" href="javascript:openQuickLink('intelx')">🧠 IntelX</a>
+                <a class="ql-btn" href="javascript:openQuickLink('hunterio')">📧 Hunter.io</a>
+                <a class="ql-btn" href="javascript:openQuickLink('haveibeenpwned')">🔓 HIBP</a>
+                <a class="ql-btn" href="javascript:openQuickLink('dehashed')">🗄 Dehashed</a>
+                <a class="ql-btn" href="javascript:openQuickLink('google')">🔍 Google</a>
+            </div>
+        </div>
 
-       // ૭. કેટેગરી બદલવી
-        function filterCategory(catId) {
-            activeCategory = catId;
-            renderCategories();
-            renderDorks();
-        }
+        <div class="glass-panel">
+            <div class="section-title">📦 CUSTOM DORK IMPORTER / EXPORTER</div>
+            <p class="page-sub">Paste a JSON array of dorks to save in browser storage and merge into the engine.</p>
+            <textarea class="form-input" id="customDorkInput" rows="5" placeholder='[{"title":"My Custom","category":"custom","dork":"filetype:pdf confidential"}]'></textarea>
+            <div class="row mt">
+                <button class="btn btn-green" onclick="importDorksFromText()">📥 IMPORT DORKS</button>
+                <button class="btn btn-blue" onclick="exportCustomDorks()">📤 EXPORT DORKS</button>
+                <button class="btn btn-pink" onclick="clearCustomDorks()">🗑 CLEAR CUSTOM</button>
+            </div>
+        </div>
+    </div>
 
-       // ૮. સર્ચ એક્ઝિક્યુટ કરવું (Single Engine)
-        function executeSearch(dorkQuery) {
-            const userQuery = document.getElementById('targetQuery').value.trim();
-            const decodedDork = decodeURIComponent(dorkQuery);
-            
-            let finalQuery = userQuery !== "" ? `"${userQuery}" ${decodedDork}` : decodedDork;
-            const targetUrl = searchEngines[selectedEngine] + encodeURIComponent(finalQuery);
-            window.open(targetUrl, '_blank');
-        }
+    <!-- ========== PAGE 5: CYBER TERMINAL CLI ========== -->
+    <div class="page" id="page-terminal">
+        <h1 class="page-title">💻 CYBER TERMINAL CLI</h1>
+        <p class="page-sub">Interactive overlay • type commands to launch engines, dorks and tools</p>
+        <div class="terminal-window">
+            <div class="term-head">
+                <div class="term-dots"><span style="background:#ff0055"></span><span style="background:#ffaa00"></span><span style="background:#00ff00"></span></div>
+                <span>root@cyberdork:~$</span>
+            </div>
+            <div class="term-output" id="termOutput"></div>
+            <div class="term-input-row">
+                <span class="prompt">root@cyberdork:~$</span>
+                <input type="text" class="term-input" id="termInput" autocomplete="off" placeholder="Type 'help' and press Enter">
+                <span class="blink">▊</span>
+            </div>
+        </div>
+        <div class="glass-panel mt">
+            <div class="section-title">📜 QUICK COMMAND CHEATSHEET</div>
+            <div class="stats-counter">
+                <div>dork --target 9898048483 --type cloud</div>
+                <div>ext --type pdf --search 9898048483</div>
+                <div>multi --query 9898048483</div>
+                <div>matrix --speed fast | normal | slow | pause</div>
+                <div>search --q "query" --engine shodan</div>
+                <div>whois --target example.com | stats | export | clear | help</div>
+            </div>
+        </div>
+    </div>
 
-        // ૯. મલ્ટી-એન્જિન સર્ચ (Google + Bing + DuckDuckGo એકસાથે)
-        function multiEngineSearch(dorkQuery) {
-            const userQuery = document.getElementById('targetQuery').value.trim();
-            const decodedDork = decodeURIComponent(dorkQuery);
-            let finalQuery = userQuery !== "" ? `"${userQuery}" ${decodedDork}` : decodedDork;
+    <!-- ========== PAGE 6: PRO ACTION HUB ========== -->
+    <div class="page" id="page-pro">
+        <h1 class="page-title">🛒 PRO ACTION HUB & DIGITAL SERVICES</h1>
+        <p class="page-sub">Premium access • donations • digital store • custom OSINT service requests</p>
 
-            window.open(searchEngines['google'] + encodeURIComponent(finalQuery), '_blank');
-            window.open(searchEngines['bing'] + encodeURIComponent(finalQuery), '_blank');
-            window.open(searchEngines['duckduckgo'] + encodeURIComponent(finalQuery), '_blank');
-        }
+        <div class="glass-panel">
+            <div class="section-title">💎 PRO SERVICES</div>
+            <div class="pro-hub">
+                <button class="pro-btn btn-gold" onclick="window.open('https://wa.me/919898048483', '_blank')">⚡ BUY NOW PRO (APPOINTMENT)</button>
+                <button class="pro-btn btn-purple" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLScJ7WjuxEXqdoSlUtxN7NQ8UeKpbEAeA9iIO-IXOmBmYzlLHQ/viewform?usp=sharing&ouid=116676179363878319046', '_blank')">🪙 DONATION SYSTEM</button>
+                <button class="pro-btn btn-blue" onclick="window.open('https://wa.me/c/919898048483', '_blank')">🛒 OFFICIAL DIGITAL STORE</button>
+                <button class="pro-btn btn-green" onclick="window.open('https://wa.me/919898048483?text=' + encodeURIComponent('Hello! I want a custom OSINT service for target 9898048483'), '_blank')">🤝 CUSTOM OSINT INQUIRY</button>
+            </div>
+        </div>
 
-        // ૧૦. લાઈવ સર્ચ ઈનપુટ લિસનર
-        document.getElementById('targetQuery').addEventListener('input', renderDorks);
+        <div class="glass-panel">
+            <div class="section-title">📄 REPORT GENERATOR</div>
+            <div class="row">
+                <input type="text" class="form-input" id="reportTarget" value="9898048483" placeholder="Report target...">
+                <select class="form-input" id="reportType" style="max-width:260px">
+                    <option value="dorks">Dork List Summary</option>
+                    <option value="extensions">Extension Database</option>
+                    <option value="quick">Quick Search Matrix</option>
+                </select>
+                <button class="btn btn-gold" onclick="generateReport()">🖨️ GENERATE REPORT</button>
+            </div>
+        </div>
+    </div>
 
-        // ઈનિશિયલાઈઝેશન
-        renderCategories();
-        renderDorks();
-    </script>
+    <!-- ========== PAGE 7: AUTH & SESSION ========== -->
+    <div class="page" id="page-auth">
+        <h1 class="page-title">🔐 AUTHENTICATION & USER SESSION MANAGER</h1>
+        <p class="page-sub">LocalStorage auth • profile dashboard • search history log • export targets</p>
+
+        <div class="glass-panel">
+            <div class="section-title">👤 USER PROFILE</div>
+            <div class="row">
+                <div class="stat-card" style="min-width:90px"><div class="stat-num" id="profileAvatar" style="font-size:34px">?</div></div>
+                <div style="flex:1">
+                    <div style="font-size:18px;font-weight:700" id="profileUsername">guest</div>
+                    <div style="font-size:12px;color:rgba(0,255,0,0.5)">Session started: <span id="profileCreated">-</span></div>
+                    <div style="font-size:12px;color:rgba(0,255,0,0.5)">Session uptime: <b id="sessionUptime" style="color:#00bcff">00:00:00</b></div>
+                </div>
+                <button class="btn btn-pink" onclick="handleLogout()">⏻ LOGOUT</button>
+            </div>
+        </div>
+
+        <div class="glass-panel">
+            <div class="section-title">🕘 SEARCH HISTORY LOG</div>
+            <div class="row mb">
+                <input type="text" class="form-input" id="historyQuery" placeholder="Quick re-run a target...">
+                <button class="btn btn-ghost" onclick="useHistoryItem(getHistory().length - 1)">▶ RUN LAST</button>
+                <button class="btn btn-blue" onclick="exportHistoryJSON()">⬇ EXPORT JSON</button>
+                <button class="btn btn-blue" onclick="exportHistoryCSV()">⬇ EXPORT CSV</button>
+                <button class="btn btn-pink" onclick="clearHistory()">🗑 CLEAR HISTORY</button>
+            </div>
+            <div class="history-list" id="historyList"></div>
+        </div>
+
+        <div class="glass-panel">
+            <div class="section-title">📊 EXPORT TARGETS</div>
+            <p class="page-sub">Dump all saved targets & search history into JSON or CSV packages.</p>
+            <div class="row">
+                <button class="btn btn-green" onclick="exportTargets()">📦 EXPORT TARGETS</button>
+                <button class="btn btn-ghost" onclick="exportDorksJSON()">⬇ DORK DB JSON</button>
+                <button class="btn btn-ghost" onclick="exportDorksCSV()">⬇ DORK DB CSV</button>
+                <button class="btn btn-ghost" onclick="exportExtensionsJSON()">⬇ EXTENSION DB JSON</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div><b>CYBERDORK OSINT SUITE v7.0</b> • Ultimate Matrix Edition • HUB: jigsi_karia</div>
+        <div>For authorized cyber security research & education only. All searches open public search engines.</div>
+        <div>1000+ Dorks • 700+ Extensions • Multi-Engine • PWA Ready</div>
+    </div>
+</div>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+}
+</script>
+<script src="dorks.js"></script>
+<script src="extensions.js"></script>
+<script src="auth.js"></script>
+<script src="tools.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

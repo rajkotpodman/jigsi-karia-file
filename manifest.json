@@ -1,0 +1,38 @@
+{
+  "name": "CyberDork OSINT Suite v7.0",
+  "short_name": "CyberDork",
+  "description": "1000+ Dorks, 700+ File Extensions, Multi-Engine Search and OSINT Toolkit. For authorized security research only.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00ff00",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23000000'/><text x='50' y='68' font-size='58' text-anchor='middle'>%F0%9F%92%80</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%23000000'/><text x='256' y='330' font-size='240' text-anchor='middle' fill='%2300ff00'>%F0%9F%92%80</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dork Engine",
+      "url": "./index.html#page-dorks",
+      "description": "Launch the CyberDork engine"
+    },
+    {
+      "name": "Extension Hub",
+      "url": "./index.html#page-extensions",
+      "description": "Browse 700+ file extensions"
+    }
+  ]
+}
